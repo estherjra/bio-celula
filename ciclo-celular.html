@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BioCélula – Ciclo Celular</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --violet-deep:  #5e2b8c;
+      --violet-mid:   #8e44d6;
+      --violet-soft:  #c79cf0;
+      --violet-pale:  #f1e6fb;
+      --violet-blush: #f8f3fd;
+      --text-dark:   #2a1b36;
+      --text-mid:    #5a4870;
+      --white:       #ffffff;
+      --radius:      14px;
+      --shadow:      0 4px 24px rgba(94,43,140,.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--violet-blush);
+      color: var(--text-dark);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav.topnav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white);
+      border-bottom: 2px solid var(--violet-soft);
+      box-shadow: 0 2px 12px rgba(94,43,140,.10);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem; font-weight: 900;
+      color: var(--violet-deep); text-decoration: none;
+    }
+    .nav-logo span { color: var(--violet-mid); }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-weight: 500; font-size: .92rem;
+      color: var(--text-mid); padding: .3rem .7rem; border-radius: 8px;
+      transition: background .2s, color .2s;
+    }
+    .nav-links a:hover { background: var(--violet-pale); color: var(--violet-deep); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 26px; height: 2px; background: var(--violet-deep); border-radius: 2px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--violet-deep) 0%, var(--violet-mid) 60%, var(--violet-soft) 100%);
+      color: var(--white); text-align: center;
+      padding: 5rem 1.5rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 120%, rgba(255,255,255,.15) 0%, transparent 70%);
+    }
+    .hero-eyebrow {
+      font-size: .8rem; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; opacity: .8; margin-bottom: .8rem;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 900; line-height: 1.1; margin-bottom: 1rem;
+    }
+    .hero-sub { font-size: 1.05rem; opacity: .88; max-width: 560px; margin: 0 auto 2rem; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4);
+      color: var(--white); font-size: .82rem; font-weight: 600;
+      padding: .45rem 1.1rem; border-radius: 50px; backdrop-filter: blur(4px);
+    }
+
+    /* ── LAYOUT ── */
+    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── INDEX BAR ── */
+    .index-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem; margin: 2.5rem 0;
+    }
+    .index-card {
+      background: var(--white); border: 2px solid var(--violet-pale);
+      border-radius: var(--radius); padding: 1rem 1.2rem;
+      text-decoration: none; color: var(--text-dark);
+      font-weight: 600; font-size: .88rem;
+      display: flex; align-items: center; gap: .65rem;
+      box-shadow: var(--shadow);
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .index-card:hover {
+      transform: translateY(-3px); border-color: var(--violet-soft);
+      box-shadow: 0 8px 28px rgba(94,43,140,.18);
+    }
+    .ic-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--violet-mid); flex-shrink: 0; }
+
+    /* ── LABELS & TITLES ── */
+    .section-label {
+      font-size: .72rem; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--violet-mid); margin-bottom: .5rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      font-weight: 700; color: var(--violet-deep); margin-bottom: 1.2rem;
+    }
+
+    /* ── VIDEO ── */
+    .video-section { margin: 2rem 0 3rem; }
+    .video-wrapper {
+      position: relative; padding-top: 56.25%;
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: 0 8px 32px rgba(94,43,140,.2);
+      border: 3px solid var(--violet-soft);
+    }
+    .video-wrapper iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; border: none;
+    }
+
+    /* ── SECTIONS ── */
+    section { margin: 3.5rem 0; }
+    .card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 2rem 2.2rem; box-shadow: var(--shadow);
+      border-left: 5px solid var(--violet-mid); margin-bottom: 1.8rem;
+    }
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--violet-deep); margin-bottom: .7rem;
+    }
+    .card p { color: var(--text-mid); font-size: .97rem; }
+    .card ul { padding-left: 1.2rem; color: var(--text-mid); font-size: .97rem; }
+    .card ul li { margin-bottom: .4rem; }
+
+    /* ── PHASES ── */
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.6rem;
+    }
+    .phase-card {
+      background: var(--white); border-radius: var(--radius);
+      box-shadow: var(--shadow); border-top: 4px solid var(--violet-mid);
+      overflow: hidden;
+      transition: transform .2s;
+      display: flex; flex-direction: column;
+    }
+    .phase-card:hover { transform: translateY(-4px); }
+    .phase-body { padding: 1.4rem 1.6rem 1.6rem; }
+    .phase-num {
+      display: inline-block; background: var(--violet-pale);
+      color: var(--violet-deep); font-size: .72rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: .3rem .75rem; border-radius: 50px; margin-bottom: .75rem;
+    }
+    .phase-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem; color: var(--violet-deep); margin-bottom: .6rem;
+    }
+    .phase-card ul { font-size: .88rem; color: var(--text-mid); padding-left: 1rem; }
+    .phase-card ul li { margin-bottom: .35rem; }
+
+    /* ── HIGHLIGHT ── */
+    .highlight {
+      background: linear-gradient(135deg, var(--violet-pale), #ece0fb);
+      border: 1.5px solid var(--violet-soft);
+      border-radius: var(--radius); padding: 1.5rem 1.8rem; margin: 2rem 0;
+    }
+    .highlight h4 { font-family: 'Playfair Display', serif; color: var(--violet-deep); margin-bottom: .5rem; }
+    .highlight p  { color: var(--text-mid); font-size: .94rem; }
+
+    /* ── DIAGRAM ── */
+    .diagram-card {
+      background: var(--white); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 2rem;
+    }
+    .diagram-legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem; margin-top: 1.6rem;
+    }
+    .legend-item { display: flex; gap: .8rem; align-items: flex-start; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 4px; margin-top: 4px; flex-shrink: 0; }
+    .legend-item h5 { font-family: 'Playfair Display', serif; font-size: .98rem; color: var(--violet-deep); margin-bottom: .2rem; }
+    .legend-item p { font-size: .85rem; color: var(--text-mid); margin: 0; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--violet-deep); color: rgba(255,255,255,.8);
+      text-align: center; padding: 2rem 1.5rem;
+      font-size: .85rem; margin-top: 4rem;
+    }
+    footer strong { color: var(--white); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none; flex-direction: column;
+        position: absolute; top: 64px; left: 0; right: 0;
+        background: var(--white); padding: 1rem 2rem;
+        border-bottom: 2px solid var(--violet-pale);
+        box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      nav.topnav { position: relative; }
+      .card { padding: 1.4rem 1.2rem; }
+      .diagram-card { padding: 1.4rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="topnav">
+    <a class="nav-logo" href="#">Bio<span>Célula</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#inicio">Inicio</a></li>
+      <li><a href="ciclo-celular.html">Ciclo Celular</a></li>
+      <li><a href="mitosis.html">Mitosis</a></li>
+      <li><a href="Metabolismo.html">Metabolismo</a></li>
+      <li><a href="respiracion.html">Resp. Aeróbica</a></li>
+      <li><a href="respiracion-anaerobica.html">Resp. Anaeróbica</a></li>
+      <li><a href="fotosintesis.html">Fotosíntesis</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" role="button" tabindex="0" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="inicio">
+    <p class="hero-eyebrow">Biología Celular · G02</p>
+    <h1>Ciclo Celular</h1>
+    <p class="hero-sub">Una serie de eventos que ocurren en una célula a medida que crece y se divide, desde la interfase hasta el inicio de la división celular.</p>
+    <span class="hero-badge">Interfase · Fase M</span>
+  </header>
+
+  <main class="page-wrap" id="ciclocelular">
+
+    <!-- ÍNDICE -->
+    <nav aria-label="Índice de contenidos" class="index-bar">
+      <a href="#intro"       class="index-card"><span class="ic-dot"></span>¿Qué es?</a>
+      <a href="#interfase"   class="index-card"><span class="ic-dot"></span>Interfase</a>
+      <a href="#division"    class="index-card"><span class="ic-dot"></span>División celular</a>
+      <a href="#esquema"     class="index-card"><span class="ic-dot"></span>Esquema general</a>
+      <a href="#video"       class="index-card"><span class="ic-dot"></span>Video</a>
+    </nav>
+
+    <!-- ¿QUÉ ES EL CICLO CELULAR? -->
+    <section id="intro">
+      <p class="section-label">Definición</p>
+      <p class="section-title">¿Qué es el Ciclo Celular?</p>
+      <div class="card">
+        <h3>Una serie de eventos</h3>
+        <p>El ciclo celular es <strong>"una serie de eventos que ocurren en una célula a medida que crece y se divide"</strong>. Asegura el crecimiento y desarrollo de toda célula durante la interfase, que culmina con la formación de nuevas células hijas a partir de una célula madre durante la división celular.</p>
+      </div>
+      <div class="highlight">
+        <h4>Dos grandes etapas</h4>
+        <p>El ciclo se organiza en dos grandes momentos: la <strong>interfase</strong>, donde la célula crece, replica su ADN y se prepara, y la <strong>fase M</strong> o división celular, donde se reparten los productos de la interfase entre las células hijas.</p>
+      </div>
+    </section>
+
+    <!-- INTERFASE -->
+    <section id="interfase">
+      <p class="section-label">Etapa 1</p>
+      <p class="section-title">Interfase Celular</p>
+      <div class="card">
+        <h3>Actividad metabólica intensa</h3>
+        <p>Es la primera etapa del ciclo celular, en la cual la célula realiza una intensa actividad metabólica. Presenta tres periodos: <strong>G1</strong>, <strong>S</strong> y <strong>G2</strong>.</p>
+      </div>
+
+      <div class="phases-grid">
+
+        <!-- Fase G1 -->
+        <article class="phase-card">
+          <div class="phase-body">
+            <span class="phase-num">Fase G1</span>
+            <h4>Primer intervalo (GAP1)</h4>
+            <ul>
+              <li>Es el periodo más variable: puede durar horas, días, meses o años, según el tipo de célula.</li>
+              <li>Llamado también periodo "pre-replicativo", porque ocurre antes de la duplicación del ADN.</li>
+              <li>Incremento del volumen citoplasmático.</li>
+              <li>Formación de nuevas organelas y organoides.</li>
+              <li>Síntesis de ARNm y de proteínas.</li>
+              <li>Las células que no se dividen (neuronas, miocitos) detienen el ciclo aquí y permanecen en <strong>fase G0</strong>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Fase S -->
+        <article class="phase-card">
+          <div class="phase-body">
+            <span class="phase-num">Fase S</span>
+            <h4>Síntesis</h4>
+            <ul>
+              <li>Periodo donde ocurren los fenómenos moleculares más importantes.</li>
+              <li><strong>Duplicación del ADN</strong> (replicación).</li>
+              <li>Síntesis de proteínas histónicas y otras proteínas asociadas al ADN.</li>
+              <li>Se inicia la duplicación de los centríolos (1 par).</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Fase G2 -->
+        <article class="phase-card">
+          <div class="phase-body">
+            <span class="phase-num">Fase G2</span>
+            <h4>Segundo intervalo (GAP2)</h4>
+            <ul>
+              <li>Los centríolos están duplicados (2 pares).</li>
+              <li>Se fosforila la histona H1, lo que ayuda a condensar los filamentos de cromatina.</li>
+              <li>La célula completa su preparación para entrar en la fase M.</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- DIVISIÓN CELULAR -->
+    <section id="division">
+      <p class="section-label">Etapa 2</p>
+      <p class="section-title">División Celular (Fase M)</p>
+      <div class="card">
+        <h3>Reparto de los productos de la interfase</h3>
+        <p>Es la distribución de los productos de la interfase celular (G1, S, G2) entre las células hijas que se forman. La división celular comprende a la <strong>cariocinesis</strong> (división nuclear) y a la <strong>citocinesis</strong> (división citoplasmática).</p>
+        <ul>
+          <li><strong>Cariocinesis:</strong> división del núcleo y reparto del material genético.</li>
+          <li><strong>Citocinesis:</strong> división del citoplasma entre las células hijas.</li>
+        </ul>
+      </div>
+      <div class="highlight">
+        <h4>El resultado final</h4>
+        <p>Al concluir la fase M, la célula madre da origen a nuevas <strong>células hijas</strong>, con las que se reinicia el ciclo celular o que pueden entrar en reposo (fase G0), según el tipo de célula.</p>
+      </div>
+    </section>
+
+    <!-- ESQUEMA GENERAL -->
+    <section id="esquema">
+      <p class="section-label">Recapitulación</p>
+      <p class="section-title">Esquema General del Ciclo</p>
+      <div class="diagram-card">
+        <svg viewBox="0 0 800 280" width="100%" role="img" aria-label="Esquema del ciclo celular: interfase con fases G1, S y G2, seguida de la fase M de división celular">
+          <!-- Interfase block -->
+          <rect x="20" y="40" width="370" height="200" rx="18" fill="#f1e6fb" stroke="#c79cf0" stroke-width="1.5"/>
+          <text x="205" y="70" text-anchor="middle" font-family="Playfair Display, serif" font-size="22" font-weight="700" fill="#5e2b8c">Interfase</text>
+          <text x="205" y="92" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#5a4870">Crecimiento y síntesis</text>
+
+          <rect x="45" y="120" width="95" height="90" rx="12" fill="#ffffff" stroke="#8e44d6"/>
+          <text x="92" y="160" text-anchor="middle" font-family="Playfair Display, serif" font-size="26" fill="#5e2b8c">G1</text>
+          <text x="92" y="182" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#5a4870">Gap 1</text>
+
+          <rect x="155" y="120" width="95" height="90" rx="12" fill="#ffffff" stroke="#8e44d6"/>
+          <text x="202" y="160" text-anchor="middle" font-family="Playfair Display, serif" font-size="26" fill="#5e2b8c">S</text>
+          <text x="202" y="182" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#5a4870">Síntesis ADN</text>
+
+          <rect x="265" y="120" width="95" height="90" rx="12" fill="#ffffff" stroke="#8e44d6"/>
+          <text x="312" y="160" text-anchor="middle" font-family="Playfair Display, serif" font-size="26" fill="#5e2b8c">G2</text>
+          <text x="312" y="182" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#5a4870">Gap 2</text>
+
+          <!-- Arrow -->
+          <path d="M390 140 H 460" stroke="#8e44d6" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#8e44d6"/>
+            </marker>
+          </defs>
+
+          <!-- Fase M block -->
+          <rect x="470" y="40" width="310" height="200" rx="18" fill="#5e2b8c"/>
+          <text x="625" y="70" text-anchor="middle" font-family="Playfair Display, serif" font-size="22" font-weight="700" fill="#ffffff">Fase M</text>
+          <text x="625" y="92" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#e3d3fb">División celular</text>
+
+          <rect x="495" y="120" width="130" height="90" rx="12" fill="#3e1a63"/>
+          <text x="560" y="158" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#fff">Cariocinesis</text>
+          <text x="560" y="178" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#c79cf0">División nuclear</text>
+
+          <rect x="635" y="120" width="130" height="90" rx="12" fill="#3e1a63"/>
+          <text x="700" y="158" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#fff">Citocinesis</text>
+          <text x="700" y="178" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#c79cf0">División citoplasma</text>
+        </svg>
+
+        <div class="diagram-legend">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#8e44d6;"></span>
+            <div>
+              <h5>Interfase</h5>
+              <p>Fases G1, S y G2: crecimiento, replicación del ADN y preparación para la división.</p>
+            </div>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#5e2b8c;"></span>
+            <div>
+              <h5>Fase M</h5>
+              <p>Distribución de los productos de la interfase entre las células hijas.</p>
+            </div>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#c79cf0;"></span>
+            <div>
+              <h5>Resultado</h5>
+              <p>Formación de nuevas células hijas a partir de la célula madre.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIDEO -->
+    <div class="video-section" id="video">
+      <p class="section-label">Video introductorio</p>
+      <p class="section-title">Conoce el ciclo celular</p>
+      <div class="video-wrapper">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/w6iJZrI2SHQ?si=ikj-Z0IGJswUo9n8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p><strong>BioCélula</strong> · Ciclo Celular · Grupo 02</p>
+    <p style="margin-top:.4rem;opacity:.7;">Proyecto Científico Informático · 2026</p>
+  </footer>
+
+  <script>
+    const ham = document.getElementById('hamburger');
+    const nav = document.getElementById('navLinks');
+    ham.addEventListener('click', () => nav.classList.toggle('open'));
+    ham.addEventListener('keydown', e => { if (e.key === 'Enter') nav.classList.toggle('open'); });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+  </script>
+</body>
+</html>

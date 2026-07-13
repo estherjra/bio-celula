@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioCélula – Biología Celular</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --verde-deep:  #1a3a2a;
+    --verde-mid:   #2d7a4f;
+    --verde-soft:  #a8d672;
+    --verde-pale:  #e3f0d8;
+    --verde-blush: #f5f9f1;
+    --text-dark:   #1b2e20;
+    --text-mid:    #43594a;
+    --white:       #ffffff;
+    --radius:      14px;
+    --shadow:      0 4px 24px rgba(26,58,42,.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--verde-blush);
+    color: var(--text-dark);
+    line-height: 1.7;
+  }
+
+  /* ── NAV ── */
+  nav.topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--white);
+    border-bottom: 2px solid var(--verde-soft);
+    box-shadow: 0 2px 12px rgba(26,58,42,.10);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+    height: 64px;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem; font-weight: 900;
+    color: var(--verde-deep); text-decoration: none;
+  }
+  .nav-logo span { color: var(--verde-mid); }
+  .nav-links { display: flex; gap: 1.6rem; list-style: none; align-items: center; }
+  .nav-links a {
+    text-decoration: none; font-weight: 500; font-size: .92rem;
+    color: var(--text-mid); padding: .3rem .7rem; border-radius: 8px;
+    transition: background .2s, color .2s;
+  }
+  .nav-links a:hover { background: var(--verde-pale); color: var(--verde-deep); }
+  .nav-links .nav-btn {
+    background: var(--verde-mid); color: var(--white) !important;
+    padding: .5rem 1.1rem; border-radius: 50px;
+  }
+  .nav-links .nav-btn:hover { background: var(--verde-deep); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { display: block; width: 26px; height: 2px; background: var(--verde-deep); border-radius: 2px; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--verde-deep) 0%, var(--verde-mid) 60%, var(--verde-soft) 100%);
+    color: var(--white); text-align: center;
+    padding: 4.5rem 1.5rem 3.5rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 120%, rgba(255,255,255,.15) 0%, transparent 70%);
+  }
+  .hero-eyebrow {
+    font-size: .8rem; font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; opacity: .8; margin-bottom: .8rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 900; line-height: 1.1; margin-bottom: 1rem;
+  }
+  .hero-sub { font-size: 1.05rem; opacity: .88; max-width: 600px; margin: 0 auto 2rem; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4);
+    color: var(--white); font-size: .82rem; font-weight: 600;
+    padding: .45rem 1.1rem; border-radius: 50px; backdrop-filter: blur(4px);
+  }
+
+  /* ── LAYOUT ── */
+  .page-wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+  section { margin: 3.5rem 0; }
+
+  /* ── INDEX BAR ── */
+  .index-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem; margin: 2.5rem 0;
+  }
+  .index-card {
+    background: var(--white); border: 2px solid var(--verde-pale);
+    border-radius: var(--radius); padding: 1rem 1.2rem;
+    text-decoration: none; color: var(--text-dark);
+    font-weight: 600; font-size: .88rem;
+    display: flex; align-items: center; gap: .65rem;
+    box-shadow: var(--shadow);
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .index-card:hover {
+    transform: translateY(-3px); border-color: var(--verde-soft);
+    box-shadow: 0 8px 28px rgba(26,58,42,.18);
+  }
+  .ic-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--verde-mid); flex-shrink: 0; }
+
+  /* ── LABELS & TITLES ── */
+  .section-label {
+    font-size: .72rem; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--verde-mid); margin-bottom: .5rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    font-weight: 700; color: var(--verde-deep); margin-bottom: 1.2rem;
+  }
+
+  /* ── PLANTA ANIMADA (video de bienvenida) ── */
+  .video-card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 3px solid var(--verde-soft);
+    overflow: hidden; padding: 0; line-height: 0;
+  }
+  .plant-scene { width: 100%; height: auto; display: block; }
+  .media-caption {
+    text-align: center; font-size: .82rem; color: var(--verde-mid);
+    margin-top: .6rem; font-style: italic;
+  }
+
+  /* tallo ondulante */
+  .stem  { animation: stemWave 3s ease-in-out infinite; transform-origin: 430px 355px; }
+  .stem2 { animation: stemWave 3.4s ease-in-out infinite; transform-origin: 430px 280px; }
+  .stem3 { animation: stemWave 2.8s ease-in-out infinite reverse; transform-origin: 430px 300px; }
+  @keyframes stemWave {
+    0%,100% { transform: rotate(0deg); }
+    50%      { transform: rotate(1.5deg); }
+  }
+  .leaf-sway-l  { animation: swayL 3s ease-in-out infinite; }
+  .leaf-sway-r  { animation: swayR 3s ease-in-out infinite; }
+  .leaf-sway-l2 { animation: swayL 3.6s ease-in-out infinite; }
+  .leaf-sway-r2 { animation: swayR 3.6s ease-in-out infinite; }
+  .leaf-sway-s1 { animation: swayL 2.8s ease-in-out infinite; }
+  .leaf-sway-s2 { animation: swayR 2.8s ease-in-out infinite; }
+  @keyframes swayL {
+    0%,100% { transform: rotate(0deg); }
+    50%      { transform: rotate(-5deg); }
+  }
+  @keyframes swayR {
+    0%,100% { transform: rotate(0deg); }
+    50%      { transform: rotate(5deg); }
+  }
+  .flower-bob { animation: bob 3s ease-in-out infinite; }
+  @keyframes bob {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-6px) rotate(3deg); }
+  }
+  .sun-pulse { animation: sunPulse 2.5s ease-in-out infinite; }
+  @keyframes sunPulse {
+    0%,100% { r: 22; opacity: 1; }
+    50%      { r: 26; opacity: .85; }
+  }
+  .pollen { animation: floatUp 6s ease-in-out infinite; }
+  .p1 { animation-delay: 0s;   animation-duration: 7s; }
+  .p2 { animation-delay: 1.2s; animation-duration: 5.5s; }
+  .p3 { animation-delay: 2.4s; animation-duration: 6.5s; }
+  .p4 { animation-delay: 0.8s; animation-duration: 8s; }
+  .p5 { animation-delay: 3s;   animation-duration: 6s; }
+  .p6 { animation-delay: 1.8s; animation-duration: 7.5s; }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) translateX(0); opacity: .6; }
+    50%  { transform: translateY(-25px) translateX(10px); opacity: .9; }
+    100% { transform: translateY(-50px) translateX(-5px); opacity: 0; }
+  }
+  .light-dot { animation: lightFlash 4s ease-in-out infinite; }
+  .l1 { animation-delay: 0s; }
+  .l2 { animation-delay: 1s; }
+  .l3 { animation-delay: 2s; }
+  .l4 { animation-delay: 3s; }
+  @keyframes lightFlash {
+    0%,100% { opacity: 0; transform: scale(1); }
+    40%,60% { opacity: .9; transform: scale(1.6); }
+  }
+
+  /* ── HERO INTRO ── */
+  .highlight {
+    background: linear-gradient(135deg, var(--verde-pale), #eef7e5);
+    border: 1.5px solid var(--verde-soft);
+    border-radius: var(--radius); padding: 1.5rem 1.8rem; margin: 2rem 0;
+    display: flex; align-items: center; gap: 1.3rem;
+  }
+  .avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--verde-soft); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+  }
+  .highlight p { color: var(--text-mid); font-size: .95rem; margin: 0; }
+  .highlight strong { color: var(--verde-deep); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 2rem 2.2rem; box-shadow: var(--shadow);
+    border-left: 5px solid var(--verde-mid); margin-bottom: 1.8rem;
+  }
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: var(--verde-deep); margin-bottom: .7rem;
+  }
+  .card p { color: var(--text-mid); font-size: .97rem; }
+  .card strong { color: var(--verde-deep); }
+
+  /* ── TEMAS (topic cards) ── */
+  .phases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.6rem;
+  }
+  .phase-card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); border-top: 4px solid var(--verde-mid);
+    overflow: hidden;
+    transition: transform .2s;
+    display: flex; flex-direction: column;
+    text-decoration: none; color: inherit;
+  }
+  .phase-card:hover { transform: translateY(-4px); }
+  .phase-icon {
+    width: 100%; height: 80px;
+    background: linear-gradient(135deg, var(--verde-mid), var(--verde-soft));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem;
+  }
+  .phase-body { padding: 1.4rem 1.6rem 1.6rem; }
+  .phase-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; color: var(--verde-deep); margin-bottom: .6rem;
+  }
+  .phase-card p { font-size: .88rem; color: var(--text-mid); }
+
+  /* ── DATOS CLAVE (three-cols) ── */
+  .fact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.4rem;
+  }
+  .fact-card {
+    background: var(--verde-deep); color: rgba(255,255,255,.9);
+    border-radius: var(--radius); padding: 1.4rem 1.6rem;
+  }
+  .fact-card strong {
+    display: block; font-family: 'Playfair Display', serif;
+    font-size: 1.02rem; color: var(--verde-soft); margin-bottom: .5rem;
+  }
+  .fact-card p { font-size: .88rem; color: rgba(255,255,255,.85); }
+
+  /* ── FORMULARIO ── */
+  .form-section {
+    background: var(--verde-deep); padding: 3.5rem 2rem; margin: 4rem 0 0;
+  }
+  .form-section .section-label { color: var(--verde-soft); }
+  .form-section .section-title { color: var(--white); }
+  .form-wrap { max-width: 600px; margin: 0 auto; }
+  .form-wrap label { display: block; margin-bottom: .3rem; font-size: .85rem; color: #cfe8b8; font-weight: 500; }
+  .form-wrap input, .form-wrap textarea, .form-wrap select {
+    width: 100%;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(168,214,114,.35);
+    border-radius: 8px;
+    padding: .7rem 1rem;
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: .9rem;
+    margin-bottom: 1.2rem;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .form-wrap input:focus, .form-wrap textarea:focus, .form-wrap select:focus { border-color: var(--verde-soft); }
+  .form-wrap select option { background: var(--verde-deep); }
+  .form-wrap textarea { resize: vertical; min-height: 100px; }
+  .btn-enviar {
+    background: var(--verde-soft); color: var(--verde-deep);
+    border: none; border-radius: 50px;
+    padding: .75rem 2.5rem;
+    font-weight: 700; font-size: .95rem;
+    cursor: pointer;
+    transition: background .2s, transform .15s;
+  }
+  .btn-enviar:hover { background: var(--white); transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0f2218; color: rgba(255,255,255,.55);
+    text-align: center; padding: 1.6rem 1.5rem;
+    font-size: .82rem;
+  }
+  footer span { color: var(--verde-soft); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none; flex-direction: column;
+      position: absolute; top: 64px; left: 0; right: 0;
+      background: var(--white); padding: 1rem 2rem;
+      border-bottom: 2px solid var(--verde-pale);
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+    nav.topnav { position: relative; }
+    .card { padding: 1.4rem 1.2rem; }
+    .highlight { flex-direction: column; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <a class="nav-logo" href="#inicio">Bio<span>Célula</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="ciclo-celular.html">Ciclo Celular</a></li>
+    <li><a href="mitosis.html">Mitosis</a></li>
+    <li><a href="Metabolismo.html">Metabolismo</a></li>
+    <li><a href="respiracion.html">Resp. Aeróbica</a></li>
+    <li><a href="respiracion-anaerobica.html">Resp. Anaeróbica</a></li>
+    <li><a href="fotosintesis.html">Fotosíntesis</a></li>
+    <li><a href="#contacto" class="nav-btn">Contacto</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" role="button" tabindex="0" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="inicio">
+  <p class="hero-eyebrow">Biología Celular · G02</p>
+  <h1>BioCélula</h1>
+  <p class="hero-sub">Tu recurso digital sobre Biología Celular. Explora el ciclo celular, la mitosis, el metabolismo, la respiración celular y la fotosíntesis a través de contenido visual, claro y actualizado.</p>
+  <span class="hero-badge">Proyecto Científico Informático · Grupo 02</span>
+</header>
+
+<main class="page-wrap">
+
+  <!-- ÍNDICE -->
+  <nav aria-label="Índice de contenidos" class="index-bar">
+    <a href="ciclo-celular.html" class="index-card"><span class="ic-dot"></span>Ciclo Celular</a>
+    <a href="mitosis.html"       class="index-card"><span class="ic-dot"></span>Mitosis</a>
+    <a href="Metabolismo.html"   class="index-card"><span class="ic-dot"></span>Metabolismo</a>
+    <a href="respiracion.html"   class="index-card"><span class="ic-dot"></span>Resp. Aeróbica</a>
+    <a href="respiracion-anaerobica.html" class="index-card"><span class="ic-dot"></span>Resp. Anaeróbica</a>
+    <a href="fotosintesis.html"  class="index-card"><span class="ic-dot"></span>Fotosíntesis</a>
+  </nav>
+
+  <!-- VIDEO DE BIENVENIDA -->
+  <section>
+    <p class="section-label">Bienvenida</p>
+    <p class="section-title">Una célula vegetal en acción</p>
+    <div class="video-card">
+      <svg class="plant-scene" viewBox="0 0 860 380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff7a1" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#ffe066" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="bgGrad" cx="50%" cy="0%" r="100%">
+            <stop offset="0%" stop-color="#0a2e1a"/>
+            <stop offset="100%" stop-color="#061209"/>
+          </radialGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <rect width="860" height="380" fill="url(#bgGrad)"/>
+
+        <circle class="pollen p1" cx="100" cy="80"  r="3" fill="#a8d672" opacity=".6"/>
+        <circle class="pollen p2" cx="300" cy="50"  r="2" fill="#a8d672" opacity=".5"/>
+        <circle class="pollen p3" cx="550" cy="100" r="2.5" fill="#c8f080" opacity=".55"/>
+        <circle class="pollen p4" cx="750" cy="60"  r="3" fill="#a8d672" opacity=".5"/>
+        <circle class="pollen p5" cx="680" cy="130" r="2" fill="#c8f080" opacity=".45"/>
+        <circle class="pollen p6" cx="200" cy="140" r="2" fill="#a8d672" opacity=".5"/>
+
+        <circle cx="760" cy="60" r="38" fill="url(#sunGlow)" opacity=".9"/>
+        <circle cx="760" cy="60" r="22" fill="#ffe566" class="sun-pulse"/>
+
+        <ellipse cx="430" cy="375" rx="420" ry="30" fill="#1a3a1a" opacity=".8"/>
+        <rect x="0" y="355" width="860" height="30" fill="#112211" rx="4"/>
+
+        <path class="stem" d="M430 355 Q428 290 432 240 Q434 190 430 150" stroke="#2d7a4f" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+        <g class="leaf-sway-l" style="transform-origin:430px 260px">
+          <path d="M430 260 Q380 220 340 200 Q370 250 430 260Z" fill="#3a9a5c" opacity=".95"/>
+          <path d="M430 260 Q385 228 348 208" stroke="#2d7a4f" stroke-width="1.2" fill="none"/>
+        </g>
+
+        <g class="leaf-sway-r" style="transform-origin:430px 230px">
+          <path d="M430 230 Q480 190 520 175 Q495 225 430 230Z" fill="#4ab86a" opacity=".95"/>
+          <path d="M430 230 Q475 198 515 183" stroke="#2d7a4f" stroke-width="1.2" fill="none"/>
+        </g>
+
+        <g class="leaf-sway-l2" style="transform-origin:430px 200px">
+          <path d="M430 200 Q395 168 365 158 Q388 192 430 200Z" fill="#3a9a5c" opacity=".9"/>
+        </g>
+
+        <g class="leaf-sway-r2" style="transform-origin:430px 178px">
+          <path d="M430 178 Q462 150 488 142 Q468 172 430 178Z" fill="#4ab86a" opacity=".9"/>
+        </g>
+
+        <g class="flower-bob" style="transform-origin:430px 148px">
+          <ellipse cx="430" cy="133" rx="12" ry="18" fill="#a8d672" opacity=".9"/>
+          <ellipse cx="430" cy="163" rx="12" ry="18" fill="#a8d672" opacity=".9"/>
+          <ellipse cx="415" cy="148" rx="18" ry="12" fill="#c8f080" opacity=".85"/>
+          <ellipse cx="445" cy="148" rx="18" ry="12" fill="#c8f080" opacity=".85"/>
+          <circle cx="430" cy="148" r="11" fill="#ffe566" filter="url(#glow)"/>
+          <circle cx="430" cy="148" r="7"  fill="#f4c430"/>
+        </g>
+
+        <path class="stem2" d="M430 280 Q400 265 375 255" stroke="#2d7a4f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <g class="leaf-sway-s1" style="transform-origin:375px 255px">
+          <path d="M375 255 Q350 238 332 230 Q352 252 375 255Z" fill="#56c478" opacity=".85"/>
+        </g>
+
+        <path class="stem3" d="M430 300 Q458 282 478 272" stroke="#2d7a4f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <g class="leaf-sway-s2" style="transform-origin:478px 272px">
+          <path d="M478 272 Q500 255 516 248 Q498 268 478 272Z" fill="#56c478" opacity=".85"/>
+        </g>
+
+        <path d="M428 355 Q415 368 400 372" stroke="#1a5c2a" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
+        <path d="M432 355 Q445 370 460 373" stroke="#1a5c2a" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
+        <path d="M430 357 Q430 372 430 378" stroke="#1a5c2a" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".6"/>
+
+        <circle class="light-dot l1" cx="380" cy="180" r="2.5" fill="#fff7a1" opacity="0"/>
+        <circle class="light-dot l2" cx="490" cy="200" r="2"   fill="#fff7a1" opacity="0"/>
+        <circle class="light-dot l3" cx="350" cy="230" r="2"   fill="#c8f080" opacity="0"/>
+        <circle class="light-dot l4" cx="510" cy="160" r="2.5" fill="#fff7a1" opacity="0"/>
+
+        <text x="430" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="rgba(168,214,114,.7)" letter-spacing="2">BIOLOGÍA CELULAR VEGETAL</text>
+      </svg>
+    </div>
+    <div class="media-caption">Ilustración animada — la fotosíntesis en una planta</div>
+
+    <div class="highlight">
+      <div class="avatar">🔬</div>
+      <p>Bienvenido a <strong>BioCélula</strong>, tu recurso digital sobre Biología Celular. Explora el ciclo celular, la mitosis, el metabolismo y los tipos de respiración celular a través de contenido visual, claro y actualizado.</p>
+    </div>
+  </section>
+
+  <!-- TEMAS PRINCIPALES -->
+  <section id="contenido">
+    <p class="section-label">Explora</p>
+    <p class="section-title">Temas Principales</p>
+    <div class="phases-grid">
+      <a href="ciclo-celular.html" class="phase-card" id="ciclo">
+        <div class="phase-icon">🔄</div>
+        <div class="phase-body">
+          <h4>Ciclo Celular</h4>
+          <p>El conjunto ordenado de eventos que ocurren en una célula desde su formación hasta su división en dos células hijas. Comprende la <strong>interfase</strong> (G1, S, G2) y la <strong>fase mitótica</strong>.</p>
+        </div>
+      </a>
+
+      <a href="mitosis.html" class="phase-card" id="mitosis">
+        <div class="phase-icon">🧬</div>
+        <div class="phase-body">
+          <h4>Mitosis</h4>
+          <p>El tipo de división celular que produce <strong>dos células hijas genéticamente idénticas</strong> a la célula madre: profase, metafase, anafase y telofase, seguidas de la citocinesis.</p>
+        </div>
+      </a>
+
+      <a href="Metabolismo.html" class="phase-card" id="metabolismo">
+        <div class="phase-icon">⚡</div>
+        <div class="phase-body">
+          <h4>Metabolismo</h4>
+          <p>El <strong>conjunto de reacciones químicas</strong> que permiten a los seres vivos obtener y utilizar energía: <em>catabolismo</em> y <em>anabolismo</em>.</p>
+        </div>
+      </a>
+
+      <a href="respiracion.html" class="phase-card" id="respiracion">
+        <div class="phase-icon">💨</div>
+        <div class="phase-body">
+          <h4>Respiración Aeróbica</h4>
+          <p>Con presencia de <strong>oxígeno</strong>: glucólisis, ciclo de Krebs y cadena de transporte de electrones. Produce entre 36 y 38 moléculas de ATP.</p>
+        </div>
+      </a>
+
+      <a href="respiracion-anaerobica.html" class="phase-card" id="respiracion-anaerobica">
+        <div class="phase-icon">🫧</div>
+        <div class="phase-body">
+          <h4>Respiración Anaeróbica</h4>
+          <p><strong>Sin oxígeno</strong>: fermentación alcohólica y láctica. Produce energía más rápido pero en menor cantidad (2 ATP).</p>
+        </div>
+      </a>
+
+      <a href="fotosintesis.html" class="phase-card">
+        <div class="phase-icon">🌿</div>
+        <div class="phase-body">
+          <h4>Fotosíntesis</h4>
+          <p>El proceso por el que las plantas convierten la <strong>luz solar en energía química</strong> y producen oxígeno, en los cloroplastos: fase luminosa y ciclo de Calvin.</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- DATOS CLAVE -->
+  <section>
+    <p class="section-label">Para recordar</p>
+    <p class="section-title">Conceptos Clave</p>
+    <div class="fact-grid">
+      <div class="fact-card">
+        <strong>¿Qué es la célula?</strong>
+        <p>Unidad básica de la vida. Puede ser procariota (sin núcleo definido) o eucariota (con núcleo membranoso).</p>
+      </div>
+      <div class="fact-card">
+        <strong>ADN y Genética</strong>
+        <p>El ADN codifica la información genética. Se duplica en la fase S del ciclo celular para transmitirse a las células hijas.</p>
+      </div>
+      <div class="fact-card">
+        <strong>Energía Celular</strong>
+        <p>La molécula de ATP es la moneda energética de la célula. Se produce principalmente en las mitocondrias mediante respiración aeróbica.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FORMULARIO -->
+<section class="form-section" id="contacto">
+  <p class="section-label" style="text-align:center;">Escríbenos</p>
+  <p class="section-title" style="text-align:center;">Contáctanos</p>
+  <div class="form-wrap">
+    <label for="nombre">Nombre completo</label>
+    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+    <label for="email">Correo electrónico</label>
+    <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
+    <label for="tema">Tema de interés</label>
+    <select id="tema" name="tema">
+      <option value="">Selecciona un tema...</option>
+      <option value="ciclo">Ciclo Celular</option>
+      <option value="mitosis">Mitosis</option>
+      <option value="metabolismo">Metabolismo</option>
+      <option value="respiracion">Respiración Aeróbica</option>
+      <option value="respiracion-anaerobica">Respiración Anaeróbica</option>
+      <option value="fotosintesis">Fotosíntesis</option>
+    </select>
+    <label for="mensaje">Mensaje o pregunta</label>
+    <textarea id="mensaje" name="mensaje" placeholder="Escribe tu consulta..."></textarea>
+    <button class="btn-enviar" type="button">Enviar mensaje</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <span>BioCélula</span> · Proyecto colaborativo de Biología Celular · Grupo 02</p>
+</footer>
+
+<script>
+  const ham = document.getElementById('hamburger');
+  const nav = document.getElementById('navLinks');
+  ham.addEventListener('click', () => nav.classList.toggle('open'));
+  ham.addEventListener('keydown', e => { if (e.key === 'Enter') nav.classList.toggle('open'); });
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+  document.querySelectorAll("a[href^='#']").forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  document.querySelector('.btn-enviar').addEventListener('click', () => {
+    const nombre = document.getElementById('nombre').value.trim();
+    if (!nombre) { alert('Por favor ingresa tu nombre.'); return; }
+    alert('Gracias, ' + nombre + '! Tu mensaje fue recibido.');
+  });
+</script>
+</body>
+</html>

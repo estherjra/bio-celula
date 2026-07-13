@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biocélula – Mitosis y Ciclo Celular</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --rose-deep:   #c2185b;
+      --rose-mid:    #e91e8c;
+      --rose-soft:   #f48fb1;
+      --rose-pale:   #fce4ec;
+      --rose-blush:  #fff0f5;
+      --text-dark:   #2d1b24;
+      --text-mid:    #5c3347;
+      --white:       #ffffff;
+      --radius:      14px;
+      --shadow:      0 4px 24px rgba(194,24,91,.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--rose-blush);
+      color: var(--text-dark);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav.topnav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white);
+      border-bottom: 2px solid var(--rose-soft);
+      box-shadow: 0 2px 12px rgba(194,24,91,.10);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem; font-weight: 900;
+      color: var(--rose-deep); text-decoration: none;
+    }
+    .nav-logo span { color: var(--rose-mid); }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-weight: 500; font-size: .92rem;
+      color: var(--text-mid); padding: .3rem .7rem; border-radius: 8px;
+      transition: background .2s, color .2s;
+    }
+    .nav-links a:hover { background: var(--rose-pale); color: var(--rose-deep); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 26px; height: 2px; background: var(--rose-deep); border-radius: 2px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--rose-deep) 0%, var(--rose-mid) 60%, var(--rose-soft) 100%);
+      color: var(--white); text-align: center;
+      padding: 5rem 1.5rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 120%, rgba(255,255,255,.15) 0%, transparent 70%);
+    }
+    .hero-eyebrow {
+      font-size: .8rem; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; opacity: .8; margin-bottom: .8rem;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 900; line-height: 1.1; margin-bottom: 1rem;
+    }
+    .hero-sub { font-size: 1.05rem; opacity: .88; max-width: 560px; margin: 0 auto 2rem; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4);
+      color: var(--white); font-size: .82rem; font-weight: 600;
+      padding: .45rem 1.1rem; border-radius: 50px; backdrop-filter: blur(4px);
+    }
+
+    /* ── LAYOUT ── */
+    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── INDEX BAR ── */
+    .index-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem; margin: 2.5rem 0;
+    }
+    .index-card {
+      background: var(--white); border: 2px solid var(--rose-pale);
+      border-radius: var(--radius); padding: 1rem 1.2rem;
+      text-decoration: none; color: var(--text-dark);
+      font-weight: 600; font-size: .88rem;
+      display: flex; align-items: center; gap: .65rem;
+      box-shadow: var(--shadow);
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .index-card:hover {
+      transform: translateY(-3px); border-color: var(--rose-soft);
+      box-shadow: 0 8px 28px rgba(194,24,91,.18);
+    }
+    .ic-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rose-mid); flex-shrink: 0; }
+
+    /* ── LABELS & TITLES ── */
+    .section-label {
+      font-size: .72rem; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--rose-mid); margin-bottom: .5rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      font-weight: 700; color: var(--rose-deep); margin-bottom: 1.2rem;
+    }
+
+    /* ── VIDEO ── */
+    .video-section { margin: 2rem 0 3rem; }
+    .video-wrapper {
+      position: relative; padding-top: 56.25%;
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: 0 8px 32px rgba(194,24,91,.2);
+      border: 3px solid var(--rose-soft);
+    }
+    .video-wrapper iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; border: none;
+    }
+
+    /* ── SECTIONS ── */
+    section { margin: 3.5rem 0; }
+    .card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 2rem 2.2rem; box-shadow: var(--shadow);
+      border-left: 5px solid var(--rose-mid); margin-bottom: 1.8rem;
+    }
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--rose-deep); margin-bottom: .7rem;
+    }
+    .card p { color: var(--text-mid); font-size: .97rem; }
+    .card ul { padding-left: 1.2rem; color: var(--text-mid); font-size: .97rem; }
+    .card ul li { margin-bottom: .4rem; }
+
+    /* ── PHASES ── */
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.6rem;
+    }
+    .phase-card {
+      background: var(--white); border-radius: var(--radius);
+      box-shadow: var(--shadow); border-top: 4px solid var(--rose-mid);
+      overflow: hidden;
+      transition: transform .2s;
+      display: flex; flex-direction: column;
+    }
+    .phase-card:hover { transform: translateY(-4px); }
+    .phase-body { padding: 1.4rem 1.6rem 1rem; }
+    .phase-img-wrap {
+      padding: 0 1.6rem 1.4rem;
+    }
+    .phase-img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid var(--rose-pale);
+      display: block;
+    }
+    .phase-num {
+      display: inline-block; background: var(--rose-pale);
+      color: var(--rose-deep); font-size: .72rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: .3rem .75rem; border-radius: 50px; margin-bottom: .75rem;
+    }
+    .phase-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem; color: var(--rose-deep); margin-bottom: .6rem;
+    }
+    .phase-card ul { font-size: .88rem; color: var(--text-mid); padding-left: 1rem; }
+    .phase-card ul li { margin-bottom: .35rem; }
+
+    /* ── HIGHLIGHT ── */
+    .highlight {
+      background: linear-gradient(135deg, var(--rose-pale), #ffe4ef);
+      border: 1.5px solid var(--rose-soft);
+      border-radius: var(--radius); padding: 1.5rem 1.8rem; margin: 2rem 0;
+    }
+    .highlight h4 { font-family: 'Playfair Display', serif; color: var(--rose-deep); margin-bottom: .5rem; }
+    .highlight p  { color: var(--text-mid); font-size: .94rem; }
+
+    /* ── GAMES ── */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.8rem; margin-top: 1rem;
+    }
+    .game-card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 1.4rem 1.4rem 1.6rem;
+      box-shadow: var(--shadow); border-top: 4px solid var(--rose-mid);
+    }
+    .game-label {
+      display: inline-block; background: var(--rose-pale);
+      color: var(--rose-deep); font-size: .72rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: .3rem .75rem; border-radius: 50px; margin-bottom: .65rem;
+    }
+    .game-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; color: var(--rose-deep); margin-bottom: .9rem;
+    }
+    .game-wrapper {
+      border-radius: 10px; overflow: hidden;
+      border: 2px solid var(--rose-pale);
+      position: relative; width: 100%;
+    }
+    .game-wrapper.ratio-wordwall { padding-top: 76%; }
+    .game-wrapper.ratio-wordwall iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%; border: none;
+    }
+    .game-wrapper.ratio-educaplay { height: 420px; }
+    .game-wrapper.ratio-educaplay iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--rose-deep); color: rgba(255,255,255,.8);
+      text-align: center; padding: 2rem 1.5rem;
+      font-size: .85rem; margin-top: 4rem;
+    }
+    footer strong { color: var(--white); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .games-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none; flex-direction: column;
+        position: absolute; top: 64px; left: 0; right: 0;
+        background: var(--white); padding: 1rem 2rem;
+        border-bottom: 2px solid var(--rose-pale);
+        box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      nav.topnav { position: relative; }
+      .card { padding: 1.4rem 1.2rem; }
+      .game-wrapper.ratio-educaplay { height: 340px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  
+  /* ── PLACEHOLDER PARA IMÁGENES NO ENCONTRADAS ── */
+  .img-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: .4rem; text-align: center; padding: 2rem 1.2rem;
+    background: repeating-linear-gradient(45deg, #f4f4f4, #f4f4f4 10px, #ececec 10px, #ececec 20px);
+    border: 2px dashed #bbb; border-radius: var(--radius, 12px);
+    color: #777; font-size: .82rem; min-height: 160px;
+  }
+  .img-placeholder .ph-icon { font-size: 1.8rem; opacity: .6; }
+  .img-placeholder .ph-file { font-family: monospace; font-size: .75rem; background: #fff; padding: .15rem .5rem; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="topnav">
+    <a class="nav-logo" href="#">Bio<span>Célula</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#inicio">Inicio</a></li>
+      <li><a href="ciclo-celular.html">Ciclo Celular</a></li>
+      <li><a href="mitosis.html">Mitosis</a></li>
+      <li><a href="Metabolismo.html">Metabolismo</a></li>
+      <li><a href="respiracion.html">Resp. Aeróbica</a></li>
+      <li><a href="respiracion-anaerobica.html">Resp. Anaeróbica</a></li>
+      <li><a href="fotosintesis.html">Fotosíntesis</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" role="button" tabindex="0" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="hero-eyebrow">Biología Celular · G02</p>
+    <h1>Mitosis</h1>
+    <p class="hero-sub">La división ecuacional que permite el crecimiento, la renovación y la reparación de todos los tejidos de nuestro cuerpo.</p>
+    <span class="hero-badge">Ciclo Celular · Fase M</span>
+  </header>
+
+  <main class="page-wrap">
+
+    <!-- ÍNDICE -->
+    <nav aria-label="Índice de contenidos" class="index-bar">
+      <a href="#intro"       class="index-card"><span class="ic-dot"></span>¿Qué es?</a>
+      <a href="#fases"       class="index-card"><span class="ic-dot"></span>Fases</a>
+      <a href="#citocinesis" class="index-card"><span class="ic-dot"></span>Citocinesis</a>
+      <a href="#juegos"      class="index-card"><span class="ic-dot"></span>Juegos</a>
+    </nav>
+
+    <!-- ¿QUÉ ES LA MITOSIS? -->
+    <section id="intro">
+      <p class="section-label">Definición</p>
+      <p class="section-title">¿Qué es la Mitosis?</p>
+      <div class="card">
+        <h3>Etimología</h3>
+        <p><strong>Mitos</strong> = filamento &nbsp;|&nbsp; <strong>osis</strong> = condición</p>
+      </div>
+      <div class="card">
+        <h3>Características de la división mitótica</h3>
+        <ul>
+          <li><strong>Somática:</strong> ocurre en las células corporales; favorece el crecimiento, la formación y la reparación de tejidos.</li>
+          <li><strong>Ecuacional:</strong> las 2 células hijas resultantes poseen <em>2n cromosomas</em> (diploides), igual que la célula madre.</li>
+          <li><strong>Homotípica:</strong> las células hijas y la célula madre son estructural y fisiológicamente iguales.</li>
+        </ul>
+      </div>
+      <div class="highlight">
+        <h4>Contexto en el ciclo celular</h4>
+        <p>La mitosis forma parte de la <strong>Fase M</strong> del ciclo celular y comprende la <em>cariocinesis</em> (división del núcleo) seguida de la <em>citocinesis</em> (división del citoplasma). Es precedida por la interfase (G1 → S → G2) donde la célula crece, replica su ADN y se prepara para dividirse.</p>
+      </div>
+    </section>
+
+    <!-- FASES -->
+    <section id="fases">
+      <p class="section-label">Kariocinesis</p>
+      <p class="section-title">Fases de la Mitosis</p>
+      <div class="phases-grid">
+
+        <!-- Interfase -->
+        <article class="phase-card">
+          <div class="phase-body">
+            <span class="phase-num">Fase 1</span>
+            <h4>Interfase (previa)</h4>
+            <ul>
+              <li>El ADN ya se ha duplicado completamente.</li>
+              <li>Los centriolos se replican.</li>
+              <li>El nucléolo es visible.</li>
+              <li>La célula se prepara activamente para la división.</li>
+            </ul>
+          </div>
+          <div class="phase-img-wrap">
+            <img class="phase-img" src="interfase.png" alt="Interfase" />
+          </div>
+        </article>
+
+        <!-- Profase -->
+        <article class="phase-card">
+          <div class="phase-body">
+            <span class="phase-num">Fase 2</span>
+            <h4>Profase</h4>
+            <ul>
+              <li>Los cromosomas se condensan y se hacen visibles.</li>
+              <li>Cada cromosoma presenta dos cromátidas unidas por el centrómero.</li>
+              <li>El citoesqueleto se desorganiza; empieza el aparato mitótico.</li>
+              <li>La envoltura nuclear comienza a desorganizarse.</li>
+            </ul>
+          </div>
+          <div class="phase-img-wrap">
+            <img class="phase-img" src="profase.png" alt="Profase" />
+          </div>
+        </article>
+
+        <!-- Prometafase -->
+        <article class="phase-card">
+          <div class="phase-body">
+            <span class="phase-num">Fase 3</span>
+            <h4>Prometafase</h4>
+            <ul>
+              <li>La envoltura nuclear desaparece por completo.</li>
+              <li>Se forma el huso mitótico microtubular entre los dos centriolos.</li>
+              <li>Los cromosomas se unen a los microtúbulos por los cinetocoros.</li>
+              <li>Los cromosomas migran hacia el ecuador celular.</li>
+            </ul>
+          </div>
+          <div class="phase-img-wrap">
+            <img class="phase-img" src="imagenes/prometafase.png" alt="Prometafase" />
+          </div>
+        </article>
+
+        <!-- Metafase -->
+        <article class="phase-card">
+          <div class="phase-body">
+            <span class="phase-num">Fase 4</span>
+            <h4>Metafase</h4>
+            <ul>
+              <li>Todos los cromosomas se alinean en el ecuador formando la <em>placa metafásica</em>.</li>
+              <li>Los cromosomas están bajo tensión, unidos a fibras cinetocóricas de polos opuestos.</li>
+            </ul>
+          </div>
+          <div class="phase-img-wrap">
+            <img class="phase-img" src="metafase.png" alt="Metafase" />
+          </div>
+        </article>
+
+        <!-- Anafase -->
+        <article class="phase-card">
+          <div class="phase-body">
+            <span class="phase-num">Fase 5</span>
+            <h4>Anafase</h4>
+            <ul>
+              <li>Las proteínas cohesinas que unen los centrómeros se separan.</li>
+              <li>Los cromosomas son arrastrados a polos opuestos al acortarse los microtúbulos cinetocóricos.</li>
+              <li>Los microtúbulos polares se alargan y la célula se estira.</li>
+            </ul>
+          </div>
+          <div class="phase-img-wrap">
+            <img class="phase-img" src="anafase.png" alt="Anafase" />
+          </div>
+        </article>
+
+        <!-- Telofase -->
+        <article class="phase-card">
+          <div class="phase-body">
+            <span class="phase-num">Fase 6</span>
+            <h4>Telofase</h4>
+            <ul>
+              <li>Los cromosomas se agrupan en polos opuestos y empiezan a desempaquetarse.</li>
+              <li>La envoltura nuclear se reorganiza alrededor de cada grupo de cromosomas.</li>
+              <li>Comienza la citocinesis (división del citoplasma).</li>
+            </ul>
+          </div>
+          <div class="phase-img-wrap">
+            <img class="phase-img" src="telofase.png" alt="Telofase" />
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- CITOCINESIS -->
+    <section id="citocinesis">
+      <p class="section-label">División citoplasmática</p>
+      <p class="section-title">Citocinesis</p>
+      <div class="card">
+        <h3>Células animales</h3>
+        <p>Se forma un <strong>anillo contráctil</strong> de actina y miosina justo en el ecuador celular. Este anillo se contrae progresivamente creando un surco de división (<em>cleavage furrow</em>) que estrangula la célula hasta separarla en dos células hijas.</p>
+      </div>
+      <div class="card">
+        <h3>Células vegetales</h3>
+        <p>Al carecer de flexibilidad para estrangularse, las células vegetales forman una <strong>placa celular</strong> a partir de vesículas del aparato de Golgi que se fusionan en el centro de la célula. Esta placa crece hacia afuera hasta completar la separación, originando una nueva pared celular entre las células hijas.</p>
+      </div>
+    </section>
+
+    <!-- VIDEO -->
+    <div class="video-section">
+      <p class="section-label">Video introductorio</p>
+      <p class="section-title">¡Observa la mitosis en acción!</p>
+      <div class="video-wrapper">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/5bq1To_RKEo?si=8h1wc9H0HkXerNAz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- RESUMEN -->
+    <section id="resumen">
+      <p class="section-label">Síntesis</p>
+      <p class="section-title">Resumen del ciclo</p>
+      <div class="highlight">
+        <h4>El ciclo celular completo</h4>
+        <p><strong>Interfase</strong> (G1 → S → G2): crecimiento, replicación del ADN y preparación. · <strong>Mitosis</strong>: reparto exacto de los cromosomas entre los núcleos hijos (profase → prometafase → metafase → anafase → telofase). · <strong>Citocinesis</strong>: separación del citoplasma en dos células hijas diploides genéticamente idénticas a la célula madre.</p>
+      </div>
+      <div class="highlight">
+        <h4>Fases que detienen el ciclo</h4>
+        <p>Las células que no se dividen (neuronas, miocitos) detienen el ciclo en la <strong>fase G0</strong>. Cuando el control del ciclo falla pueden ocurrir <strong>apoptosis</strong> (muerte programada) o <strong>necrosis</strong> (muerte prematura), y en casos de proliferación descontrolada puede desarrollarse <strong>cáncer</strong>.</p>
+      </div>
+    </section>
+
+    <!-- JUEGOS -->
+    <section id="juegos">
+      <p class="section-label">¡A jugar y aprender!</p>
+      <p class="section-title">🎮 Juegos interactivos</p>
+
+      <div class="games-grid">
+
+        <!-- Juego 1 -->
+        <div class="game-card">
+          <div class="game-label">Juego 1</div>
+          <h4>Pon a prueba tu memoria</h4>
+          <div class="game-wrapper ratio-wordwall">
+            <iframe
+              src="https://wordwall.net/es/embed/dbcdd53947634d839d67ccf49d4a52b5?themeId=1&templateId=22&fontStackId=0"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Juego 2 -->
+        <div class="game-card">
+          <div class="game-label">Juego 2</div>
+          <h4>¿Cuánto sabes de mitosis?</h4>
+          <div class="game-wrapper ratio-wordwall">
+            <iframe
+              src="https://wordwall.net/es/embed/16dbfb9a47f3465b82836bfd7d208479?themeId=1&templateId=2&fontStackId=0"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Juego 3 -->
+        <div class="game-card">
+          <div class="game-label">Juego 3</div>
+          <h4>Mitosis y Citocinesis</h4>
+          <div class="game-wrapper ratio-educaplay">
+            <iframe
+              src="https://es.educaplay.com/juego/9683797-mitosis_y_citocinesis.html"
+              allow="fullscreen; autoplay; allow-top-navigation-by-user-activation"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p><strong>BioCélula</strong> · Mitosis · Grupo 02</p>
+    <p style="margin-top:.4rem;opacity:.7;">Proyecto Científico Informático · 2026</p>
+  </footer>
+
+  <script>
+    const ham = document.getElementById('hamburger');
+    const nav = document.getElementById('navLinks');
+    ham.addEventListener('click', () => nav.classList.toggle('open'));
+    ham.addEventListener('keydown', e => { if (e.key === 'Enter') nav.classList.toggle('open'); });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+  </script>
+
+<script>
+  // Muestra un aviso visual si una imagen local no se encuentra (archivo faltante en la carpeta)
+  document.querySelectorAll('img').forEach(function (img) {
+    img.addEventListener('error', function () {
+      if (this.dataset.fallbackApplied) return;
+      this.dataset.fallbackApplied = "1";
+      var ph = document.createElement('div');
+      ph.className = 'img-placeholder';
+      var cls = this.className;
+      if (cls) ph.classList.add(cls);
+      ph.innerHTML = '<span class="ph-icon">🖼️</span>' +
+        '<span>Imagen no encontrada</span>' +
+        '<span class="ph-file">' + this.getAttribute('src') + '</span>' +
+        '<span style="max-width:220px;">Coloca este archivo junto al HTML para que se muestre.</span>';
+      this.replaceWith(ph);
+    });
+  });
+</script>
+</body>
+</html>
